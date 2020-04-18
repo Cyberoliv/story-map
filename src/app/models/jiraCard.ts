@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { JiraIssue } from './models/jiraIssue';
+import { JiraIssue } from './jiraIssue';
 
 @Component({
   selector: 'demande',
-  template: `Ma demande: {{data.key}}`,
-  styles: [`h1 { font-family: Lato; }`]
+  template: `{{data.key}}`,
 })
 export class JiraCard {
   @Input('data') data:JiraIssue;

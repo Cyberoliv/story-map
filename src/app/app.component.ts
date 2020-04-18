@@ -39,16 +39,20 @@ export class AppComponent implements OnInit {
       this.JIRAService.getDemandesJira().subscribe(jiraIssues => {
 
         this.jiraList = jiraIssues;
-        this.sprintList = Array.from(new Set(jiraIssues.map(jira => jira.sprint).filter((sprint => sprint != "backlog")))).sort();
+        this.sprintList = Array.from(new Set(jiraIssues.map(jira => jira.sprint))).sort();
+        // Gestion de la backlog à mettre en premier
+        if (this.sprintList.indexOf("backlog")>= 0) {
+          this.sprintList.splice(this.sprintList.indexOf(name), 1)
+          this.sprintList.unshift("backlog")
+        }
+
         let epicList = Array.from(new Set(jiraIssues.map(jira => jira.epic)));
 
         epicList.forEach( (epic, index) => {
           this.dataSource.push({ position: "#"+(index+1), epicName: epic })
           })
-
         this.displayedColumns = this.fixColumns.map(column => column.name).concat(this.sprintList)
         this.isLoadingJira = false;
-        console.log(this.dataSource)
       });
     } catch (e) {
       //window.alert('Un problème au chargement des repos a été détecté');
@@ -56,12 +60,8 @@ export class AppComponent implements OnInit {
     }
   }
 
-  getJirasInEpic(epicName: string) {
-    console.log(epicName)
-  }
-
-    getJira(indice) {
-    return "#" + indice;
+  getJirasInEpicBySprint(epicName: string, sprint: string) {
+    return this.jiraList.filter(jira => jira.epic === epicName && jira.sprint === sprint)
   }
 
   ngAfterViewChecked() {

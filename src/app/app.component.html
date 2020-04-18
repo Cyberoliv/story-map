@@ -30,7 +30,7 @@
 
   <ng-container *ngFor="let column of sprintList" matColumnDef="{{column}}">
     <th mat-header-cell *matHeaderCellDef>{{column}}</th>
-    <td mat-cell *matCellDef="let element">{{getJirasInEpicBySprint(element.epicName)}}</td>
+    <td mat-cell *matCellDef="let element"><demande [data]=jira *ngFor="let jira of getJirasInEpicBySprint(element.epicName, column)"></demande></td>
   </ng-container>  
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
