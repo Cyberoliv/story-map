@@ -2,7 +2,7 @@
     <button mat-button (click)="toggleColumn(sprint)">{{ sprint }}</button>
 </ng-container>
 <br>
-<demande [data]=maJira>lll</demande>
+<!--<demande [data]=maJira>lll</demande> -->
 <br>
 
   <table mat-table #table [dataSource]="dataSource"  
@@ -10,10 +10,28 @@
   [cdkDropListData]="dataSource"
   (cdkDropListDropped)="dropTable($event)"
   class="mat-elevation-z8">
-  <ng-container *ngFor="let column of columns" matColumnDef="{{column.name}}">
+
+<!--
+  <ng-container matColumnDef="position">
+    <th mat-header-cell *matHeaderCellDef>Position</th>
+    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="epicName">
+    <th mat-header-cell *matHeaderCellDef>epicName</th>
+    <td mat-cell *matCellDef="let element"> {{element.epicName}} </td>
+  </ng-container>  
+-->
+
+  <ng-container *ngFor="let column of fixColumns" matColumnDef="{{column.name}}">
     <th mat-header-cell *matHeaderCellDef>{{column.label}}</th>
     <td mat-cell *matCellDef="let element">{{element[column.name]}}</td>
   </ng-container>
+
+  <ng-container *ngFor="let column of sprintList" matColumnDef="{{column}}">
+    <th mat-header-cell *matHeaderCellDef>{{column}}</th>
+    <td mat-cell *matCellDef="let element">{{getJirasInEpicBySprint(element.epicName)}}</td>
+  </ng-container>  
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"

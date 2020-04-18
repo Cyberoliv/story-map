@@ -14,22 +14,20 @@ export class AppComponent implements OnInit {
 
   @ViewChild('table', { static: false }) table: MatTable<any>;
 
-  title = 'testpfdjira';
-
   isLoadingJira: boolean;
   private firstTime = true;
   dataSource: any[] = [];
 
   //{ columnDef: 'symbol',   header: 'Symbol', cell: (element: any) => `${element.symbol}`   },
-  columns: Array<any> = [
+  fixColumns: Array<any> = [
     { name: 'position', label: 'Position' },
     { name: 'epicName', label: 'Epic' },
-    { name: 'backlog', label: 'backlog' },
   ];
 
   maJira: JiraIssue;
 
-  sprintList: Set<string>;
+  jiraList: JiraIssue[];  
+  sprintList: string[];
   displayedColumns: string[];
 
   constructor(private JIRAService: JIRAService, private changeDetectorRef: ChangeDetectorRef) { }
@@ -39,41 +37,16 @@ export class AppComponent implements OnInit {
     this.isLoadingJira = true;
     try {
       this.JIRAService.getDemandesJira().subscribe(jiraIssues => {
-        let epicExists;
-        let nbEpics = 0;
-        jiraIssues.forEach(jira => {
 
-          
-        if(!this.maJira){
-          this.maJira = jira;
-        }
+        this.jiraList = jiraIssues;
+        this.sprintList = Array.from(new Set(jiraIssues.map(jira => jira.sprint).filter((sprint => sprint != "backlog")))).sort();
+        let epicList = Array.from(new Set(jiraIssues.map(jira => jira.epic)));
 
-          // Recherche de l'existence de l'epic dans la dataSource
-          if (epicExists = this.dataSource.filter(data => data['epicName'] === jira.epic)[0]) {
-            // Elle existe, le sprint existe-t-il ?
-            if (epicExists[jira.sprint]) {
-              // Oui, on rajoute la Jira aux existantes
-              epicExists[jira.sprint] = epicExists[jira.sprint] + "," + jira.key;
-            } else {
-              // Non on, créé le sprint en ajoutant la Jira
-              epicExists[jira.sprint] = jira.key;
-            }
-          } else {
-            // L' epic n'existe pas, on l'ajoute
-            this.dataSource.push({ position: `${this.getJira(++nbEpics)}`, epicName: jira.epic });
-            // Et on ajoute la demande dans le sprint dans la foulée
-            this.dataSource.filter(data => data['epicName'] === jira.epic)[0][jira.sprint] = jira.key;
-          }
+        epicList.forEach( (epic, index) => {
+          this.dataSource.push({ position: "#"+(index+1), epicName: epic })
+          })
 
-        });
-
-        this.sprintList = new Set(jiraIssues.map(jira => jira.sprint).filter((sprint => sprint != "backlog")).sort());
-
-        this.sprintList.forEach(element => {
-          this.columns.push({ name: element, label: element });
-        });
-        
-        this.displayedColumns = this.columns.map(column => column.name)
+        this.displayedColumns = this.fixColumns.map(column => column.name).concat(this.sprintList)
         this.isLoadingJira = false;
         console.log(this.dataSource)
       });
@@ -81,6 +54,10 @@ export class AppComponent implements OnInit {
       //window.alert('Un problème au chargement des repos a été détecté');
       console.log(e)
     }
+  }
+
+  getJirasInEpic(epicName: string) {
+    console.log(epicName)
   }
 
     getJira(indice) {
