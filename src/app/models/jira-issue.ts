@@ -4,12 +4,16 @@ export class JiraIssue {
     public project: string;
     public epic: string;
     public sprint: string;
+    public description: string;
+    public summary: string;
 
 
     constructor(element: any) {
         this.key = element['key'];
+        this.summary = element['fields']['summary'];    
+        this.description = element['fields']['description'];    
+        this.project = element['fields']['project']['name'];                
         this.type = element['fields']['issuetype']['name'];
-        this.project = element['fields']['project']['name'];
         this.epic = this.getEpic(element['fields']['customfield_10001']);
         this.sprint = this.getSprint(element['fields']['customfield_10000']);
     }
