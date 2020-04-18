@@ -1,13 +1,9 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-  CdkDragHandle
-} from "@angular/cdk/drag-drop";
+import { CdkDragDrop, moveItemInArray, CdkDragHandle} from "@angular/cdk/drag-drop";
 import { MatTable } from "@angular/material/table";
 import { JIRAService } from "./services/jira.service";
 import { JiraIssue } from "./models/jira-issue";
+import { MatMenuTrigger } from "@angular/material/menu";
 
 @Component({
   selector: "app-root",
@@ -15,7 +11,6 @@ import { JiraIssue } from "./models/jira-issue";
   styleUrls: ["./app.component.css"]
 })
 export class AppComponent implements OnInit {
-  @ViewChild("table", { static: false }) table: MatTable<any>;
 
   isLoadingJira: boolean;
   dataSource: any[] = [];
@@ -27,6 +22,11 @@ export class AppComponent implements OnInit {
     { name: "position", label: "Position" },
     { name: "epicName", label: "Epic" }
   ];
+
+  @ViewChild("table", { static: false }) table: MatTable<any>;
+  @ViewChild(MatMenuTrigger)
+  contextMenu: MatMenuTrigger;
+  contextMenuPosition = { x: '0px', y: '0px' };  
 
   constructor(private JIRAService: JIRAService) {}
 
@@ -58,13 +58,40 @@ export class AppComponent implements OnInit {
       jira => jira.epic === epicName && jira.sprint === sprint
     );
   }
+
+  onContextMenu(event: MouseEvent, item: any) {
+    event.preventDefault();
+    this.contextMenuPosition.x = event.clientX + 'px';
+    this.contextMenuPosition.y = event.clientY + 'px';
+    this.contextMenu.menuData = { 'item': item };
+    this.contextMenu.menu.focusFirstItem('mouse');
+    this.contextMenu.openMenu();
+  }
+
+  sendTop(item: any) {
+    const prevIndex = this.dataSource.findIndex(d => d === item);
+    this.moveAndRenderTable(prevIndex, 0);
+  }
+
+  sendBottom(item: any) {
+    const prevIndex = this.dataSource.findIndex(d => d === item);
+    this.moveAndRenderTable(prevIndex, this.dataSource.length);
+  }
+
+   moveAndRenderTable(prevIndex: number, toIndex: number) {
+    moveItemInArray(this.dataSource, prevIndex, toIndex);
+    this.table.renderRows();
+  }
+
+
   getDisplayedColumns(sprintCols: string[]) {
     sprintCols.sort();
     // Gestion de la backlog à mettre en premier
     let backlog = "backlog";
     if (sprintCols.indexOf(backlog) >= 0) {
-      sprintCols.splice(sprintCols.indexOf(backlog), 1);
-      sprintCols.unshift(backlog);
+      moveItemInArray(sprintCols, sprintCols.indexOf(backlog), 0);
+      //sprintCols.splice(sprintCols.indexOf(backlog), 1);
+      //sprintCols.unshift(backlog);
     }
     // Ajout des colonnes fixes
     return this.fixColumns.map(column => column.name).concat(sprintCols);
@@ -72,8 +99,7 @@ export class AppComponent implements OnInit {
 
   dropTable(event: CdkDragDrop<any[]>) {
     const prevIndex = this.dataSource.findIndex(d => d === event.item.data);
-    moveItemInArray(this.dataSource, prevIndex, event.currentIndex);
-    this.table.renderRows();
+    this.moveAndRenderTable(prevIndex, event.currentIndex);
   }
 
   toggleColumn(name: string) {
