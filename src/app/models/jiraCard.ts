@@ -3,7 +3,7 @@ import { JiraIssue } from './jiraIssue';
 
 @Component({
   selector: 'demande',
-  template: `{{data.key}}`,
+  template: `{{data.key}}<br>`,
 })
 export class JiraCard {
   @Input('data') data:JiraIssue;
