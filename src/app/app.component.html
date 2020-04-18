@@ -21,11 +21,11 @@
     <td mat-cell *matCellDef="let element"> {{element.epicName}} </td>
   </ng-container>  
 -->
-
 	<ng-container *ngFor="let column of fixColumns" matColumnDef="{{column.name}}">
 		<th mat-header-cell *matHeaderCellDef>{{column.label}}</th>
-		<td mat-cell *matCellDef="let element" (contextmenu)="onContextMenu($event, element)">{{element[column.name]}}
-		</td>
+		<td mat-cell *matCellDef="let element" 
+      (contextmenu)="onContextMenu($event, element)"
+      cdkDragHandle style="pointer-events: all;" >{{element[column.name]}}</td>
 	</ng-container>
 
 	<ng-container *ngFor="let column of sprintList" matColumnDef="{{column}}">
@@ -36,7 +36,8 @@
 	</ng-container>
 
 	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-	<tr mat-row *matRowDef="let row; columns: displayedColumns;" cdkDrag [cdkDragData]="row"></tr>
+	<tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+    cdkDragLockAxis="y" cdkDrag [cdkDragData]="row" style="pointer-events: none;"></tr>
 </table>
 
 <div style="visibility: hidden; position: fixed" [style.left]="contextMenuPosition.x"
