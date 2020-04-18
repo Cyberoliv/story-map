@@ -8,6 +8,7 @@ import { JIRAService } from './services/jira.service';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HttpErrorInterceptor } from './services/http-error.interceptor';
 import { JiraCardComponent } from './models/jira-card/jira-card.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { JiraCardComponent } from './models/jira-card/jira-card.component';
       useClass: HttpErrorInterceptor,
       multi: true
     },
-    JIRAService
+    JIRAService,
+    CookieService 
   ],
   bootstrap: [AppComponent]
 })

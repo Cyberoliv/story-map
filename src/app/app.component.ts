@@ -4,6 +4,7 @@ import { MatTable } from "@angular/material/table";
 import { JIRAService } from "./services/jira.service";
 import { JiraIssue } from "./models/jira-issue";
 import { MatMenuTrigger } from "@angular/material/menu";
+import { CookieService } from "ngx-cookie-service";
 
 @Component({
   selector: "app-root",
@@ -28,9 +29,15 @@ export class AppComponent implements OnInit {
   contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };  
 
-  constructor(private JIRAService: JIRAService) {}
+  constructor(private JIRAService: JIRAService, private cookieService: CookieService) {}
 
   ngOnInit() {
+
+    let jsonEPIC = this.cookieService.get('MEMOEPIC');
+    let epicListLoaded = jsonEPIC ? JSON.parse(jsonEPIC): [];
+
+    console.log(epicListLoaded)
+
     this.isLoadingJira = true;
     try {
       this.JIRAService.getDemandesJira().subscribe(jiraIssues => {
@@ -39,6 +46,12 @@ export class AppComponent implements OnInit {
         // Passer par des Set pour l'unicité des résultats
         this.sprintList = Array.from(new Set(jiraIssues.map(jira => jira.sprint)));
         let epicList = Array.from(new Set(jiraIssues.map(jira => jira.epic)));
+        // Suppresion des épopées sauvegardées mais plus présentes...
+        epicListLoaded = epicListLoaded.filter(epic => epicList.indexOf(epic)>= 0);
+        // Concaténation aux nouvelles épopées
+        epicListLoaded = epicListLoaded.concat(epicList)
+        // Remise dans un set pour unicité
+        epicList = Array.from(new Set(epicListLoaded));
 
         epicList.forEach((epic, index) => {
           this.dataSource.push({ position: "#" + (index + 1), epicName: epic });
@@ -84,9 +97,7 @@ export class AppComponent implements OnInit {
   }
 
   saveEpicPositions(){
-    console.log(this.dataSource);
-    console.log(JSON.stringify(this.dataSource));
-
+    this.cookieService.set('MEMOEPIC', JSON.stringify(this.dataSource.map(element => element.epicName)) )
   }
 
   getDisplayedColumns(sprintCols: string[]) {
