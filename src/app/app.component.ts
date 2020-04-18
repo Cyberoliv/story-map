@@ -83,6 +83,11 @@ export class AppComponent implements OnInit {
     this.table.renderRows();
   }
 
+  saveEpicPositions(){
+    console.log(this.dataSource);
+    console.log(JSON.stringify(this.dataSource));
+
+  }
 
   getDisplayedColumns(sprintCols: string[]) {
     sprintCols.sort();
