@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
   jiraList: JiraIssue[];
   sprintList: string[];
 
-  fixColumns: Array<any> = [
+  fixColumns: any[] = [
     { name: "position", label: "Position" },
     { name: "epicName", label: "Epic" }
   ];
@@ -29,41 +29,55 @@ export class AppComponent implements OnInit {
   contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };  
 
-  constructor(private JIRAService: JIRAService, private cookieService: CookieService) {}
+  constructor(private jiraService: JIRAService, private cookieService: CookieService) {}
 
   ngOnInit() {
 
-    let jsonEPIC = this.cookieService.get('MEMOEPIC');
-    let epicListLoaded = jsonEPIC ? JSON.parse(jsonEPIC): [];
-
-    console.log(epicListLoaded)
-
     this.isLoadingJira = true;
     try {
-      this.JIRAService.getDemandesJira().subscribe(jiraIssues => {
+      this.jiraService.getDemandesJira().subscribe(jiraIssues => {
         this.jiraList = jiraIssues;
 
         // Passer par des Set pour l'unicité des résultats
         this.sprintList = Array.from(new Set(jiraIssues.map(jira => jira.sprint)));
-        let epicList = Array.from(new Set(jiraIssues.map(jira => jira.epic)));
-        // Suppresion des épopées sauvegardées mais plus présentes...
-        epicListLoaded = epicListLoaded.filter(epic => epicList.indexOf(epic)>= 0);
-        // Concaténation aux nouvelles épopées
-        epicListLoaded = epicListLoaded.concat(epicList)
-        // Remise dans un set pour unicité
-        epicList = Array.from(new Set(epicListLoaded));
+        this.displayedColumns = this.getDisplayedColumns(this.sprintList);
+        // Filtre des colonne depuis la sauvegarde (cookie)
+        this.filterColsFromSave();
 
+        let epicList: string[] = Array.from(new Set(jiraIssues.map(jira => jira.epic)));
+        // Tri des epics depuis la sauvegarde (cookie)
+        epicList = this.reorderEpicsFromSave(epicList);
+        // Alimentation de la dataSource
         epicList.forEach((epic, index) => {
           this.dataSource.push({ position: "#" + (index + 1), epicName: epic });
         });
-
-        this.displayedColumns = this.getDisplayedColumns(this.sprintList);
         this.isLoadingJira = false;
       });
     } catch (e) {
       window.alert('Un problème au chargement des repos a été détecté');
       console.log(e);
     }
+  }
+
+  filterColsFromSave() {
+    // Lecture cookie
+    let jsonSPRINT = this.cookieService.get('MEMOSPRINT');
+    let hiddenSprintList = jsonSPRINT ? JSON.parse(jsonSPRINT): [];
+    // On supprime des colonnes celles sauvées comme masquées
+    // On garde donc celles qui ne sont PAS dans la liste :-)
+    this.displayedColumns = this.displayedColumns.filter(sprint => hiddenSprintList.indexOf(sprint) < 0)
+  }
+
+  reorderEpicsFromSave(epicList: string[]): string[] {
+    // Lecture cookie
+    let jsonEPIC = this.cookieService.get('MEMOEPIC');
+    let epicListLoaded = jsonEPIC ? JSON.parse(jsonEPIC): [];
+    // Suppresion des épopées sauvegardées mais plus présentes...
+    epicListLoaded = epicListLoaded.filter(epic => epicList.indexOf(epic) >= 0);
+    // Concaténation aux nouvelles épopées
+    epicListLoaded = epicListLoaded.concat(epicList)
+    // Remise dans un set pour unicité
+    return Array.from(new Set(epicListLoaded));
   }
 
   getJirasInEpicBySprint(epicName: string, sprint: string) {
@@ -97,7 +111,12 @@ export class AppComponent implements OnInit {
   }
 
   saveEpicPositions(){
+    // Epics
     this.cookieService.set('MEMOEPIC', JSON.stringify(this.dataSource.map(element => element.epicName)) )
+    // Les sprints, on sauve les masqués !
+    // Plus simple à gérer
+    let hiddenCols = this.sprintList.filter(sprint => this.displayedColumns.indexOf(sprint) < 0);
+    this.cookieService.set('MEMOSPRINT', JSON.stringify(hiddenCols) )
   }
 
   getDisplayedColumns(sprintCols: string[]) {
