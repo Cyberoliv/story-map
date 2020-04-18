@@ -7,12 +7,12 @@ import {DemoMaterialModule} from '../material-module';
 import { JIRAService } from './services/jira.service';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HttpErrorInterceptor } from './services/http-error.interceptor';
-import { DemandeJiraComponent } from './models/demande-jira/demande-jira.component';
+import { JiraCard } from './models/jiraCard';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DemandeJiraComponent,
+    JiraCard
   ],
   imports: [
     BrowserModule,
