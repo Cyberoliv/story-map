@@ -2,9 +2,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Observable, throwError  } from 'rxjs';
 import { map, catchError, retry } from "rxjs/operators";
-
-// Données
-import { JiraIssue } from '../models/jiraIssue';
+import { JiraIssue } from '../models/demande-jira/demande-jira.component';
 
 
 @Injectable()

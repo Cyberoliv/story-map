@@ -1,10 +1,18 @@
+import { Component, OnInit, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-demande-jira',
+  templateUrl: './demande-jira.component.html',
+  styleUrls: ['./demande-jira.component.css']
+})
+
 export class JiraIssue {
+
     public key: string;
     public type: string;
     public project: string;
     public epic: string;
     public sprint: string;
-
 
     constructor(element: any) {
         this.key = element['key'];
