@@ -41,11 +41,11 @@ export class AppComponent implements OnInit {
         // Passer par des Set pour l'unicité des résultats
         this.sprintList = Array.from(new Set(jiraIssues.map(jira => jira.sprint)));
         this.displayedColumns = this.getDisplayedColumns(this.sprintList);
-        // Filtre des colonne depuis la sauvegarde (cookie)
+        // Filtre des colonne à afficher depuis la sauvegarde (cookie)
         this.filterColsFromSave();
 
         let epicList: string[] = Array.from(new Set(jiraIssues.map(jira => jira.epic)));
-        // Tri des epics depuis la sauvegarde (cookie)
+        // Tri des epics slon la sauvegarde (cookie)
         epicList = this.reorderEpicsFromSave(epicList);
         // Alimentation de la dataSource
         epicList.forEach((epic, index) => {
@@ -63,7 +63,7 @@ export class AppComponent implements OnInit {
     // Lecture cookie
     let jsonSPRINT = this.cookieService.get('MEMOSPRINT');
     let hiddenSprintList = jsonSPRINT ? JSON.parse(jsonSPRINT): [];
-    // On supprime des colonnes celles sauvées comme masquées
+    // On supprime des colonnes celles sauvées comme masquées dans le cookie
     // On garde donc celles qui ne sont PAS dans la liste :-)
     this.displayedColumns = this.displayedColumns.filter(sprint => hiddenSprintList.indexOf(sprint) < 0)
   }
@@ -73,8 +73,9 @@ export class AppComponent implements OnInit {
     let jsonEPIC = this.cookieService.get('MEMOEPIC');
     let epicListLoaded = jsonEPIC ? JSON.parse(jsonEPIC): [];
     // Suppresion des épopées sauvegardées mais plus présentes...
+    // On ne garde donc celles qui sont présentes dans les 2 listes
     epicListLoaded = epicListLoaded.filter(epic => epicList.indexOf(epic) >= 0);
-    // Concaténation aux nouvelles épopées
+    // Concaténation aux épopées actuelles
     epicListLoaded = epicListLoaded.concat(epicList)
     // Remise dans un set pour unicité
     return Array.from(new Set(epicListLoaded));
