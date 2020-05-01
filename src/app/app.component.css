@@ -10,3 +10,7 @@ td, th {
   margin-right: 10px;
   margin-bottom: 10px;
 }
+
+mat-grid-tile {
+  min-width: 200px;
+}
