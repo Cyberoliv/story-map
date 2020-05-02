@@ -3,7 +3,7 @@ import { NgModule, Component } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {DemoMaterialModule} from '../material-module';
+import {MaterialModule} from '../material-module';
 import { JIRAService } from './services/jira.service';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HttpErrorInterceptor } from './services/http-error.interceptor';
@@ -18,7 +18,7 @@ import { JiraCard } from './jiraCard';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    DemoMaterialModule,
+    MaterialModule,
   ],
   providers: [
     {
