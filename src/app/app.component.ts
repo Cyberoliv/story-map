@@ -15,7 +15,6 @@ export class AppComponent implements OnInit {
 
   jiraDistribution() {
     return 225* Number(this.jiraPerRow)
-
   }
 
   jiraPerRow = "3"
