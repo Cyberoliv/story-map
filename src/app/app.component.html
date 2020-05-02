@@ -1,8 +1,8 @@
-<mat-grid-list cols="4" rowHeight="100px" *ngIf="jiraList.length > 0">
+<mat-grid-list [ngStyle]="{'min-width.px': 1000}" cols="4" rowHeight="100px" *ngIf="jiraList.length > 0">
   <mat-grid-tile *ngFor="let jira of getJirasInEpicBySprint('Sans Epic', '2020-04-2')">
-	<jira-card [data]=jira></jira-card>
+  	<jira-card [data]=jira></jira-card>
   </mat-grid-tile>
-  </mat-grid-list>
+</mat-grid-list>
 <br><br>
 
 
@@ -17,9 +17,14 @@
 	</ng-container>
 
 	<ng-container *ngFor="let sprint of sprintList" matColumnDef="{{sprint}}">
-		<th mat-header-cell *matHeaderCellDef>{{sprint}}</th>
+		<th [ngStyle]="{'min-width.px': 225*4}" mat-header-cell *matHeaderCellDef>{{sprint}}</th>
 		<td mat-cell *matCellDef="let element">
-			<jira-card [data]=jira *ngFor="let jira of getJirasInEpicBySprint(element.epicName, sprint)"></jira-card>
+			<mat-grid-list cols="4" rowHeight="80px">
+  <mat-grid-tile *ngFor="let jira of getJirasInEpicBySprint(element.epicName, sprint)">
+  	<jira-card [data]=jira></jira-card>
+  </mat-grid-tile>
+</mat-grid-list>
+
 		</td>
 	</ng-container>
 

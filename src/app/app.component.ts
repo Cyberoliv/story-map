@@ -125,8 +125,8 @@ export class AppComponent implements OnInit {
     // Gestion de la backlog à mettre en premier
     let backlog = "backlog";
     if (sprintCols.indexOf(backlog) >= 0) {
-      moveItemInArray(sprintCols, sprintCols.indexOf(backlog), 0);
-      //sprintCols.splice(sprintCols.indexOf(backlog), 1);
+      //moveItemInArray(sprintCols, sprintCols.indexOf(backlog), 0);
+      sprintCols.splice(sprintCols.indexOf(backlog), 1);
       //sprintCols.unshift(backlog);
     }
     // Ajout des colonnes fixes
