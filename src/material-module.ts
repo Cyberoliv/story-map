@@ -107,7 +107,6 @@ const AllMaterialModules=[
   CdkTableModule,
   CdkTreeModule
 ];
-
 @NgModule({
   imports: [AllMaterialModules],
   exports: [AllMaterialModules],

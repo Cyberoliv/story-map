@@ -4,7 +4,7 @@ import { Observable, throwError  } from 'rxjs';
 import { map, catchError, retry } from "rxjs/operators";
 
 // Données
-import { JiraIssue } from '../models/jiraIssue';
+import { JiraIssue } from '../models/jira-issue';
 
 
 @Injectable()

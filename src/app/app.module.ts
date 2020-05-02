@@ -7,12 +7,13 @@ import {MaterialModule} from '../material-module';
 import { JIRAService } from './services/jira.service';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HttpErrorInterceptor } from './services/http-error.interceptor';
-import { JiraCard } from './jiraCard';
+import { JiraCardComponent } from './models/jira-card/jira-card.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    JiraCard
+    JiraCardComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +27,8 @@ import { JiraCard } from './jiraCard';
       useClass: HttpErrorInterceptor,
       multi: true
     },
-    JIRAService
+    JIRAService,
+    CookieService 
   ],
   bootstrap: [AppComponent]
 })
