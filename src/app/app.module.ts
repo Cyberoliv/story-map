@@ -10,6 +10,7 @@ import { HttpErrorInterceptor } from './services/http-error.interceptor';
 import { JiraCardComponent } from './models/jira-card/jira-card.component';
 import { CookieService } from 'ngx-cookie-service';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     BrowserAnimationsModule,
     HttpClientModule,
     MaterialModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    FormsModule
+
   ],
   providers: [
     {
