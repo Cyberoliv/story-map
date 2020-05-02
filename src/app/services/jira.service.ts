@@ -19,7 +19,6 @@ export class JIRAService {
   public getDemandesJira(): Observable<JiraIssue[]> {
     //const url = "https://enigmes.forumenigmes.net/searchjira.json"
     const url = '/assets/searchjira.json';
-    console.log("Avant lecture")
     return this.http.get(url, { headers: this.headers }).pipe(map(values => {
       return values['issues'].map(element => {
           return new JiraIssue(element);

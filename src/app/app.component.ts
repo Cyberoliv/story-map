@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   isLoadingJira: boolean;
   dataSource: any[] = [];
   displayedColumns: string[];
-  jiraList: JiraIssue[];
+  jiraList: JiraIssue[] = [];
   sprintList: string[];
 
   fixColumns: any[] = [

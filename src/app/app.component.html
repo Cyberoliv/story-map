@@ -1,4 +1,4 @@
-<mat-grid-list cols="4" rowHeight="100px">
+<mat-grid-list cols="4" rowHeight="100px" *ngIf="jiraList.length > 0">
   <mat-grid-tile *ngFor="let jira of getJirasInEpicBySprint('Sans Epic', '2020-04-2')">
 	<jira-card [data]=jira></jira-card>
   </mat-grid-tile>
