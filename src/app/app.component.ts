@@ -13,6 +13,12 @@ import { CookieService } from "ngx-cookie-service";
 })
 export class AppComponent implements OnInit {
 
+  jiraDistribution() {
+    return 225* Number(this.jiraPerRow)
+
+  }
+
+  jiraPerRow = "3"
   isLoadingJira: boolean;
   dataSource: any[] = [];
   displayedColumns: string[];
