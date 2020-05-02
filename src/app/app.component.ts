@@ -17,11 +17,11 @@ export class AppComponent implements OnInit {
     return 225* Number(this.jiraPerRow)
   }
 
-  colsize() {
+  setColsize() {
     return {
         'min-width.px': this.jiraDistribution(),
         'max-width.px': this.jiraDistribution()
-        
+    }
   }
 
   jiraPerRow = "3"
