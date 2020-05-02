@@ -17,6 +17,13 @@ export class AppComponent implements OnInit {
     return 225* Number(this.jiraPerRow)
   }
 
+  colsize() {
+    return {
+        'min-width.px': this.jiraDistribution(),
+        'max-width.px': this.jiraDistribution()
+        
+  }
+
   jiraPerRow = "3"
   isLoadingJira: boolean;
   dataSource: any[] = [];

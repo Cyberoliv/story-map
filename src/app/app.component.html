@@ -19,7 +19,7 @@
 	<ng-container *ngFor="let sprint of sprintList" matColumnDef="{{sprint}}">
 		<th mat-header-cell *matHeaderCellDef>{{sprint}}</th>
 		<td mat-cell *matCellDef="let element">
-      <div fxLayout="row wrap" fxLayoutGap="5px" [ngStyle]="{'min-width.px': jiraDistribution(), 'max-width.px': jiraDistribution()}">
+      <div fxLayout="row wrap" fxLayoutGap="5px" [ngStyle]="colsize()">
   	    <jira-card [data]=jira *ngFor="let jira of getJirasInEpicBySprint(element.epicName, sprint)"></jira-card>
       </div>
 		</td>
