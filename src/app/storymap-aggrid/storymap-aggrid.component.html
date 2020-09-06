@@ -57,13 +57,17 @@
             </mat-list>
         </mat-sidenav>
         <mat-sidenav-content>
+            <!--                 [getRowHeight]="getRowHeight"
+            [rowHeight]="rowHeight"
+        (columnResized)="onColumnResized($event)"
+        [defaultColDef]="defaultColDef"
+     -->
             <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-alpine" 
                 [rowData]="rowData" 
                 [columnDefs]="columnDefs" 
-                [defaultColDef]="defaultColDef"
-                [getRowHeight]="getRowHeight"
                 [frameworkComponents]="frameworkComponents"
-                (gridReady)="alert($event)">
+                (gridReady)="onGridReady($event)"
+                [getRowHeight]="getRowHeight">
             </ag-grid-angular>
         </mat-sidenav-content>
     </mat-sidenav-container>
@@ -90,6 +94,6 @@
     </button>
     <button mat-menu-item class="overflowVisible" fxLayoutAlign="space-between center" (click)="$event.stopPropagation();">
         <span>Sprints</span>
-        <mat-slider min="1" [max]="display.miniDisplay ? 10 : 5" thumbLabel step="1" [(ngModel)]="display.jiraPerRowOther"></mat-slider>
+        <mat-slider min="1" [max]="display.miniDisplay ? 10 : 5" thumbLabel step="1" [value]="display.jiraPerRowBacklog" (change)="updateJiraPerRowSetting($event)"></mat-slider>
     </button>
 </mat-menu>
