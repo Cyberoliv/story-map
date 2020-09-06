@@ -1,0 +1,14 @@
+<mat-card [ngClass]="{'miniDisplay': miniDisplay}">
+    <div fxLayout="row" fxLayoutAlign="space-between none">
+        <div>
+            <img src="{{issue.type.iconUrl}}"><span class="key" matTooltip="{{issue.summary}}"><a href="{{issue.url}}" target="_blank">{{issue.key}}</a></span>
+        </div>
+    </div>
+    <div class="status {{issue.status.cssColorName}} truncate" matTooltip="{{issue.status.name}}">{{issue.status.name}}</div>
+    <ng-container *ngIf="!miniDisplay">
+        <div class="desc">{{issue.summary}}</div>
+        <div class="footer" fxLayout="row" fxLayoutAlign="space-between center">
+            <div class="estim">{{issue.estimation}}</div>
+        </div>
+    </ng-container>
+</mat-card>

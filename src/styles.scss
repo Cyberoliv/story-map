@@ -1,0 +1,75 @@
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+@import "../node_modules/ag-grid-community/src/styles/ag-grid.scss";
+@import "../node_modules/ag-grid-community/src/styles/ag-theme-alpine/sass/ag-theme-alpine-mixin.scss";
+
+.ag-theme-alpine {
+    @include ag-theme-alpine();
+}
+
+.ag-theme-alpine .ag-cell {
+  line-height: unset !important;
+  padding-left: unset !important;
+  padding-right: unset !important;
+  border-right: solid 1px !important;
+  border-right-color: #babfc7 !important;
+}
+
+.ag-theme-alpine .ag-header-cell {
+  border-right: solid 1px !important;
+  border-right-color: #babfc7 !important;
+}
+
+
+html, body {
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+mat-tooltip-component > .mat-tooltip {
+  white-space: pre;
+  font-size: 14px;
+}
+
+.green-progress .mat-progress-bar-fill::after {
+  background-color: green !important;
+}
+
+:root {
+  --jira-card-width: 200px;
+  --jira-card-margin: 5px;
+  --jira-card-padding: 8px;
+  --jira-card-width-minidisplay: 105px;
+  --jira-card-margin-minidisplay: 5px;
+  --jira-card-padding-minidisplay: 5px;
+}
+
+.mat-simple-snackbar {
+  display: block !important;
+  text-align: center !important;
+}
+
+.notif-error {
+  color: #fff;
+  background-color: #d81b60;
+}
+
+.notif-success {
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #66bb6a;
+}
+
+.notif-warning {
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #ffca28;
+}
+
+.notif-info {
+  color: #fff;
+  background-color: #03a9f4;
+}

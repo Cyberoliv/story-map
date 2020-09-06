@@ -1,0 +1,5 @@
+<div id="cell-container" fxLayout="row wrap">
+    <jira-card *ngFor="let issue of getIssues()"
+        [issue]=issue [miniDisplay]=miniDisplay>
+    </jira-card>
+</div>

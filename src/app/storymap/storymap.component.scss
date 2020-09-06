@@ -1,0 +1,116 @@
+mat-sidenav-container, mat-sidenav-content {
+  overflow: initial;
+}
+
+mat-toolbar {
+  font-size: 14px !important;
+}
+
+mat-toolbar > * {
+  margin-right: 20px;
+}
+
+mat-toolbar > *:first-child {
+  font-size: 24px !important;
+  margin-right: 5px !important;
+}
+
+mat-toolbar > *:last-child {
+  margin-right: 0px !important;
+}
+
+#storymap-container {
+  width: 100%;  
+}
+
+th {
+  vertical-align: middle !important;
+}
+
+td,
+th {
+  padding: 10px !important;
+}
+
+td.mat-cell,
+th.mat-header-cell {
+  vertical-align: top;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-right-width: 1px;
+  border-right-style: solid;
+  border-bottom-color: rgba(0, 0, 0, 0.12);
+  border-right-color: rgba(0, 0, 0, 0.12);
+}
+
+tr.mat-footer-row {
+  background-color: darksalmon;
+}
+
+.mat-row:nth-child(even) {
+  background-color: #fff;
+}
+
+.mat-row:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+.mat-progress-spinner {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+}
+
+.jira-cards-container:empty{
+  min-height: 100px;
+  /*background-color: lightcoral;*/
+  content: "\00a0";
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-dragging .mat-row:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+::ng-deep .overflowVisible {
+  overflow: visible !important;
+}
+
+button.mat-menu-item {
+  height: 36px;
+  line-height: 36px;
+}
+
+button.mat-menu-item > span {
+  margin-right: 20px;
+}
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+.avatar-inner {
+  height: 24px;
+  max-width: 24px;
+  max-height: 24px;
+  width: 24px;
+  border-radius: 100%;
+  overflow: hidden;  
+  margin-left: 5px;
+  vertical-align: top;
+}

@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  jiraURL: window.location.hostname == "portail-pfd.retraite.aa" ? "https://jira.retraite.aa" : "https://jira-h.retraite.aa",
+  pfdAPIURL: window.location.hostname == "portail-pfd.retraite.aa" ? "https://vxlpfdpfw001:3001" : "https://vhlpfdpfw001:3001"
 };
 
 /*
