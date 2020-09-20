@@ -1,5 +1,8 @@
-<div id="cell-container" fxLayout="row wrap">
+<div id="cell-container" fxLayout="row wrap" 
+    cdkDropList
+    (cdkDropListDropped)="drop($event)">
     <jira-card *ngFor="let issue of getIssues()"
-        [issue]=issue [miniDisplay]=miniDisplay>
+        [issue]=issue [miniDisplay]=miniDisplay
+        cdkDrag>
     </jira-card>
 </div>

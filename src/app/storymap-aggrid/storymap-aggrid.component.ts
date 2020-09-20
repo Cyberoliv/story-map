@@ -10,6 +10,8 @@ import { IssueList } from '../shared/models/issuelist';
 import { MatrixSelector, MatrixConf } from "../shared/models/matrix"
 import { UserService } from '../services/user.service';
 import { MatrixCellRenderer } from '../shared/renderers/matrix-cell-renderer/matrix-cell-renderer.component';
+import { HeaderTest } from '../shared/renderers/headerTest';
+import { EstimationHeaderRenderer } from '../shared/renderers/estimationHeaderRenderer';
 
 @Component({
   selector: 'app-storymap-aggrid',
@@ -18,28 +20,25 @@ import { MatrixCellRenderer } from '../shared/renderers/matrix-cell-renderer/mat
 }) 
 export class StorymapAggridComponent implements OnInit {
 
-  frameworkComponents = {
-    jiraCellRenderer: MatrixCellRenderer,
-  };
-
-  gridApi; gridColumnApi;
-
-  columnDefs = [];
-  rowData = [];
+  // AG GRID
+  columnDefs;
+  rowData;
+  gridApi; 
+  gridColumnApi;
 
   readonly version: string = version
 
   matrixChoices: MatrixSelector[] = [
-    new MatrixSelector("Composants", "getComponents()", "ComponentRenderer"),
-    new MatrixSelector("Épopée", "epic.key", "EpicRenderer"),
-    new MatrixSelector("Étiquettes", "labels", "LabelRenderer"),
-    new MatrixSelector("Point d'effort", "estimation", "EstimationRenderer"),
-    new MatrixSelector("Priorité", "priority.name", "priorityRenderer"),
-    new MatrixSelector("Rapporteur", "reporter.displayName", "UserRenderer"),
-    new MatrixSelector("Responsable", "assignee.displayName", "UserRenderer"),
-    new MatrixSelector("Sprint", "sprint.name", "SprintRenderer"),
-    new MatrixSelector("Type de ticket", "type.name", "IssueTypeRenderer"),
-    new MatrixSelector("Version Commerciale", "finalVersion.name", "VersionRenderer"),
+    new MatrixSelector("Composants", "getComponents()", undefined),
+    new MatrixSelector("Épopée", "epic.key", undefined),
+    new MatrixSelector("Étiquettes", "labels", undefined),
+    new MatrixSelector("Point d'effort", "estimation", EstimationHeaderRenderer),
+    new MatrixSelector("Priorité", "priority.name", undefined),
+    new MatrixSelector("Rapporteur", "reporter.displayName", undefined),
+    new MatrixSelector("Responsable", "assignee.displayName", undefined),
+    new MatrixSelector("Sprint", "sprint.name", HeaderTest),
+    new MatrixSelector("Type de ticket", "type.name", undefined),
+    new MatrixSelector("Version Commerciale", "finalVersion.name", undefined),
   ]
 
   matrixConf: MatrixConf;
@@ -50,23 +49,10 @@ export class StorymapAggridComponent implements OnInit {
   startTime: number;
 
   display = {
-    jiraPerRowBacklog: "3",
-    jiraPerRowOther: "3",
+    jiraPerRow: "3",
     miniDisplay: false,
-    showClosed: false,
-    showBacklog: true,
-    epicStatus: []
   }
-
-  defaultColDef = {
-    //flex: 1,
-    cellClass: 'cell-wrap-text',
-//    autoHeight: true,
-//    sortable: true,
-//    resizable: true,
-  };
-
-  private getRowHeight;
+  getRowHeight;
 
   @ViewChild(MatMenuTrigger, { static: false }) contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
@@ -74,19 +60,17 @@ export class StorymapAggridComponent implements OnInit {
   @ViewChild(MatSidenav, { static: false }) sidenav: MatSidenav;
 
   constructor(public user: UserService, private jiraService: JiraService, private snackBar: MatSnackBar, private dialog: MatDialog) { 
-
     this.getRowHeight = (function(params) {
-      let cols: string[] = Object.keys(params.data).filter(key => key != 'headerCol')
-      let jiraCardHeight = 116
-      let maxInCol = 0;
+      const cols: string[] = Object.keys(params.data).filter(key => key != 'headerCol')
+      const jiraCardHeight: number = this.display.miniDisplay ? 57 : 116
+      let maxInCol: number = 0;
       cols.forEach(col => {
-        let issuesInCol: JiraIssue[] = params.data[col]
+        const issuesInCol: JiraIssue[] = params.data[col]
         maxInCol = issuesInCol.length > maxInCol ? issuesInCol.length : maxInCol;
       });
-      let nbRowInCell = Math.ceil(maxInCol / Number(this.display.jiraPerRowOther))
+      const nbRowInCell = Math.ceil(maxInCol / Number(this.display.jiraPerRow))
       return nbRowInCell * jiraCardHeight + 1;
     }).bind(this);
-
   }
 
   ngOnInit() {
@@ -102,15 +86,15 @@ export class StorymapAggridComponent implements OnInit {
   updateDataSource(event: any = null) {
 
     //console.log("DEB - Calcul datasource (Matrice)")
-    this.columnDefs = this.generateColumns()
-    this.rowData = this.generateData();
+    this.columnDefs = this.generateMatrixColumns()
+    this.rowData = this.generateMatrixData();
     //console.log("FIN - Calcul datasource (Matrice) " + (Date.now() - this.startTime) + "ms")
     this.totalTime += Date.now() - this.startTime;
     this.startTime = Date.now();
 
   }
 
-  generateData() {
+  generateMatrixData() {
     let data = [];
     this.getMatrixRows().forEach(row => {
       let content = {};
@@ -124,30 +108,32 @@ export class StorymapAggridComponent implements OnInit {
     return data;
   }
 
-  generateColumns() {
+  generateMatrixColumns() {
     let columnDefinitions = []
     columnDefinitions.push(
       {
         headerName: this.matrixConf.getRowLabel(),
         field: 'headerCol',
-        pinned: 'left'
-      }
+        pinned: 'left',
+        width: 150,      }
     );
+
+    const colWidth = this.getColWidth();
     this.getMatrixColumns().forEach(key => {
       let mappedColumn = {
-        headerName: key ? key.toUpperCase() : undefined,
         field: key,
-        cellRenderer: 'jiraCellRenderer',
-        width: this.getColWidth(),
+        width: colWidth,
+        headerName: key ? key.toUpperCase() : undefined,
+        headerComponentFramework: this.matrixConf.col.renderer,
+        cellRendererFramework: MatrixCellRenderer,
+        cellRendererParams: {
+          miniDisplay : this.display.miniDisplay
+        }
       }
       columnDefinitions.push(mappedColumn);
 
     });
     return columnDefinitions;
-  }
-
-  onColumnResized(params) {
-    params.api.resetRowHeights();
   }
 
   async initData() {
@@ -159,7 +145,7 @@ export class StorymapAggridComponent implements OnInit {
 
     //console.log("DEB - Lecture des tickets")
     this.issueList = new IssueList(await this.jiraService.getIssuesByFilter(this.matrixConf.getFilter()));
-    //this.issueList.setIssues(this.issueList.getIssues().filter(issue => issue.epic.key))
+    this.issueList.setIssues(this.issueList.getIssues().filter(issue => issue.epic.key))
     //console.log("FIN - Lecture des tickets => " + (Date.now() - this.startTime) + "ms")
     this.totalTime += Date.now() - this.startTime;
     this.startTime = Date.now();
@@ -176,6 +162,7 @@ export class StorymapAggridComponent implements OnInit {
     this.startTime = Date.now();
     this.updateDataSource()
     this.isLoading = false;
+    console.log("done !")
   }
 
   getMatrixRows(): string[] {
@@ -189,18 +176,8 @@ export class StorymapAggridComponent implements OnInit {
     console.log("todo")
   }
 
-  onContextMenu(event: MouseEvent, item: JiraIssue) {
-    event.preventDefault();
-    this.contextMenuPosition.x = event.clientX + 'px';
-    this.contextMenuPosition.y = event.clientY + 'px';
-    this.contextMenu.menuData = { 'item': item };
-    this.contextMenu.menu.focusFirstItem('mouse');
-    this.contextMenu.openMenu();
-  }
-
-  getColWidth(sprint: string = "other"): number {
-    let value = sprint === "backlog" ? this.display.jiraPerRowBacklog : this.display.jiraPerRowOther
-    return this.getJiraCardWidth() * Number(value)
+  getColWidth(): number {
+    return this.getJiraCardWidth() * Number(this.display.jiraPerRow) + 2 // +2 pour les borders de la grille
   }
 
   getMatrixChoiceByLabel(label: string): MatrixSelector {
@@ -214,7 +191,6 @@ export class StorymapAggridComponent implements OnInit {
       return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--jira-card-width').replace("px", ''))
         + (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--jira-card-margin').replace("px", '')) * 2)
         + (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--jira-card-padding').replace("px", '')) * 2)
-        + 1
     } else {
       return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--jira-card-width-minidisplay').replace("px", ''))
         + (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--jira-card-margin-minidisplay').replace("px", '')) * 2)
@@ -250,31 +226,36 @@ export class StorymapAggridComponent implements OnInit {
     );
   }
 
-  updateJiraPerRowSetting(event: any) {
-    this.display.jiraPerRowOther = event.value
-    this.gridApi.resetRowHeights();
-
-    let sizableColumns = this.gridColumnApi.getAllColumns().map(e=>e.colId).filter(e=>e!='headerCol')
-    sizableColumns.forEach(e=> {
-      this.gridColumnApi.setColumnWidth(e,this.getColWidth())
-    })
-    this.gridApi.resetRowHeights();
-/*
-    let columnWidths = []
-    this.gridColumnApi.getAllColumns().forEach(col => {
-      console.log(col)
-      let toto = {}
-      toto[col.colId] = 500
-      columnWidths.push(toto)
-    });
-
-    console.log(columnWidths)
-    console.log(this.gridColumnApi)
-
-    this.gridColumnApi.setColumnWidths(columnWidths)
-    console.log(this.display.jiraPerRowOther)
-    */
+  updateMiniDiplay() {
+    this.display.miniDisplay = this.display.miniDisplay ? false : true
+    this.updateGridConf({redrawRows : true})
   }
+
+  updateJiraPerRowSetting(event: any) {
+    this.display.jiraPerRow = event.value
+    this.updateGridConf({redrawRows : false})
+  }
+
+  private updateGridConf({ redrawRows }: {redrawRows: boolean}) {
+    
+    this.getApiGridColumns().forEach(col => {
+
+      if(col.colDef.cellRendererParams.miniDisplay != this.display.miniDisplay) {
+        col.colDef.cellRendererParams.miniDisplay = this.display.miniDisplay
+      }
+      this.gridColumnApi.setColumnWidth(col,this.getColWidth())
+    });
+    if(redrawRows) { 
+      this.gridApi.redrawRows()
+    }
+    this.gridApi.resetRowHeights();
+  }
+
+  private getApiGridColumns(addHeader:boolean = false) {
+    let cols = this.gridColumnApi.getAllColumns();
+    return addHeader ? cols : cols.filter(col => col.colId != 'headerCol')
+  }
+
 
   onGridReady(params) {
     this.gridApi = params.api;

@@ -1,8 +1,9 @@
 export class MatrixSelector {
     public label: string;
     public field: string;
-    public renderer: string;
-    constructor(label: string, field: string, renderer: string) {
+    public renderer: any;
+
+    constructor(label: string, field: string, renderer: any) {
         this.label = label;
         this.field = field;
         this.renderer = renderer;

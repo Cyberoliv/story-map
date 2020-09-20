@@ -12,11 +12,13 @@ export class MatrixCellRenderer implements ICellRendererAngularComp {
 
   private params: any;
   private issueList:JiraIssue[];
+  public miniDisplay: boolean;
 
   // called on init
   agInit(params: any): void {
     this.params = params;
     this.issueList = this.params.value
+    this.miniDisplay = this.params.miniDisplay
   }
 
   // called when the cell is refreshed
@@ -29,5 +31,9 @@ export class MatrixCellRenderer implements ICellRendererAngularComp {
 
   public getIssues(): JiraIssue[] {
     return this.issueList;
+  }
+
+  public drop(event: any) {
+    console.log(event)
   }
 }

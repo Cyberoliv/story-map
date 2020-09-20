@@ -16,12 +16,16 @@ import { LoginComponent } from './login/login.component';
 import { UserService } from './services/user.service';
 import { AgGridModule } from 'ag-grid-angular';
 import { StorymapAggridComponent } from './storymap-aggrid/storymap-aggrid.component';
+import { HeaderTest } from './shared/renderers/headerTest';
+import { EstimationHeaderRenderer } from './shared/renderers/estimationHeaderRenderer';
 
 @NgModule({
   declarations: [
     AppComponent,
     JiraCardComponent,
     MatrixCellRenderer,
+    EstimationHeaderRenderer,
+    HeaderTest,
     LoginComponent,
     StorymapAggridComponent
   ],
@@ -34,7 +38,7 @@ import { StorymapAggridComponent } from './storymap-aggrid/storymap-aggrid.compo
     ReactiveFormsModule,
     FlexLayoutModule,
     AppRoutingModule,
-    AgGridModule.withComponents([MatrixCellRenderer])
+    AgGridModule.withComponents([MatrixCellRenderer, HeaderTest, EstimationHeaderRenderer])
   ],
   providers: [
     JiraService,

@@ -10,4 +10,8 @@ export class JiraCardComponent {
 
   @Input('issue') issue: JiraIssue;
   @Input('miniDisplay') miniDisplay: boolean;
+
+  constructor() {
+    //console.log(getComputedStyle(document.documentElement).getPropertyValue('--jira-card-width'))
+  }
 }
