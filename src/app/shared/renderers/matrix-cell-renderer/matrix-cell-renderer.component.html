@@ -3,6 +3,7 @@
     (cdkDropListDropped)="drop($event)">
     <jira-card *ngFor="let issue of getIssues()"
         [issue]=issue [miniDisplay]=miniDisplay
-        cdkDrag>
+        cdkDrag (cdkDragStarted)="started($event)"
+        id={{issue.key}}>
     </jira-card>
 </div>

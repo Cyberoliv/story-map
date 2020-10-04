@@ -26,7 +26,8 @@ export class MatrixCellRenderer implements ICellRendererAngularComp {
   refresh(params: any): boolean {
     //this.params = params;
     //this.issueList = this.params.value
-    return false;
+    console.log("refresh")
+    return true;
   }
 
   public getIssues(): JiraIssue[] {
@@ -34,6 +35,20 @@ export class MatrixCellRenderer implements ICellRendererAngularComp {
   }
 
   public drop(event: any) {
+    console.log("dropped !")
     console.log(event)
   }
+
+  public started(event: any) {
+    console.log("Drag tart !")
+    console.log(this.params.node)
+    console.log(this.params.colDef)
+    console.log(this.params.column)
+    console.log(event.source.element.nativeElement.id)
+    console.log()
+    let issue = this.issueList.find(issue => issue.key === event.source.element.nativeElement.id)
+    issue.estimation = "10"
+    this.params.refreshCell()
+    this.params.node.setDataValue(this.params.colDef.field, this.issueList)
+  }  
 }
